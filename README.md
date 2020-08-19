@@ -39,7 +39,9 @@ Bug Location: Player Controller Script
 Dash Video: https://www.youtube.com/watch?v=I4Ja5Ar63Pw
 
 --- The player dash ability must function identically to how it is performed in Mega Man X on the SNES. The issue here is that if the player presses the Dash key while standing still, the dash animation will play but the player will not move. The player should recieve a small forward boost if no direction is held and the Dash key is pressed.
+
 --- If the player performs a dash while moving and jumps, they should carry the Dash speed throughout the duration of the jump and double jump. However, the player's speed returns to normal while in mid-air during a dash jump, slowing down the player in mid-air.
+
 ---- If the player dashes in midair, they should recieve a horizontal boost of momentum while also keeping the same Y value (just fly in the air, essentially). However, noting happens if the dash key is pressed while in mid-air.
    
  
@@ -48,6 +50,7 @@ Bug Location: Player Controller Script
 Melee attack video: https://www.youtube.com/watch?v=KamdeKs6eKo
 
 --- The intention here is to have a "1-2-3" attack, where if the Attack key is pressed 3 times in succession, the player would unleash 3 consecutive sowrd swings, with 3 different animations. The AttackHitbox would be instantied and un-instantied in this order: Attack key pressed, play animation, activate hitbox after x amount of frames after frame x of animation, (but only hits the enemy once), deactivate hitbox after frame x of animation, finish animation. If attack is pressed again during attack 1, attack 2 would begin in the same order. Attack 3 would begin after attack 2, but this is a "multi-hit" hitbox that can hit enemies repeatedly for x amount of times. My theory is that this hitbox can be activatd and deactivatd several times thorughout the attack 3 animation. (For reference, look up Mega Man X5 or X6 gameplay of Zero, on the PlayStation 1). I cannot set this up porperly, so he code is currently commented out and only attack 1 plays if attack is pressed.
+
 --- If the player presses attack in midair, they perform a spinning midair attack. This is mostly functioning as intended but needs some polishing. Firstly, the attack should be cancelled if the player comes in contact with the ground. Right now the attack continues to play until the "attack in mid-air" function is completed. Lastly, this attack should be a multi-hit hitbox similar to the grounded Attack 3, but right now it is a single hit.
 
 ----- Wall climbing -----
@@ -79,13 +82,16 @@ Alien 1
 Shooting code video: https://www.youtube.com/watch?v=_Z1t7MNk0c4
 Bug Loctions: Alien1Shoot and Alien1Projectile Scripts. Perhaps in Alien Controller as well.
 --- He despawns after a few seconds. I don't know why.
+
 --- I wrote a script named Alien1Shoot, which is reponsible for spawining the bullet and deleting itself after coming in contact with the player (and going off-screen perhaps). The code currently does not work and does not instantie the placeholder yellow circle graphic named "enemybullet".
+
 -- The alien runs towards the player but does not stop. Then he disappears as stated before.
 
 Alien 2
 Bug Location: Alien2Agro Script.
 Agro video: https://www.youtube.com/watch?v=nEYA3hzZHJ0
 Raycast video: https://www.youtube.com/watch?v=2VX8uD_xUlM
+
 --- Not too many issues with this one. His attack function does not work when he is close to the player, nor does he stop in place. He continously moves towards the player forever.
 
 UI
