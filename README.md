@@ -14,6 +14,20 @@ Lastly I have created concpets for levels, weapons, and bosses, but I have nothi
 Level select video: https://www.youtube.com/watch?v=jBnaFqIZZDw
 
 
+----- Current Game Controls --------
+
+A or Left Arrow, move left.
+
+D or Right Arrow, move right.
+
+Space to jump.
+
+Left Mouse (Fire1) to attack.
+
+Left Shift to Dash.
+
+I would like to intergrate these to a gamepad (example, PS4 controller) at some point.
+
 
 -----------------------------------------------PLAYER CONTROLLER BUGS/THINGS TO FIX--------------------------------------------------
 
