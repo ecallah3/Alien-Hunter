@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
     //[SerializeField]public int extraJumps;
     private float jumpTimeCounter;
     [SerializeField]private bool canJump;
+    private float moveInput;
     
 
     [Header("Dashing")]
@@ -135,7 +136,35 @@ public class PlayerController : MonoBehaviour
 
         // Movement and jump inputs-----------------------------------------------------------------------------------
         // move right
-        if (Input.GetKey("d") || Input.GetKey("right"))
+        //***Spencer Edits*******
+        //Instead of looking for a specific key press, use the get axis method
+        //This makes sure the player can use both WASD to move and the arrow keys, it will also help with controller support
+        moveInput = Input.GetAxisRaw("Horizontal");
+        if(moveInput < 0)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+        else
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+        }
+        if (!isAttacking)
+        {
+            rb2d.velocity = new Vector2(moveInput*runSpeed, rb2d.velocity.y);
+        }
+        else if (isAttacking && isGrounded)
+        {
+            rb2d.velocity = new Vector2(0, rb2d.velocity.y);
+        }
+        else if (isAttacking && !isGrounded)
+        {
+            rb2d.velocity = new Vector2(moveInput*runSpeed, rb2d.velocity.y);
+        }
+        if (isGrounded && canDash && !isAttacking && Mathf.Abs(moveInput) > .1)
+        {
+            animator.Play("Player_run");
+        }
+        /*if (Input.GetKey("d") || Input.GetKey("right"))
         {
             if (!isAttacking)
             {
@@ -150,7 +179,10 @@ public class PlayerController : MonoBehaviour
                 rb2d.velocity = new Vector2(runSpeed, rb2d.velocity.y);
             }
             if (isGrounded && canDash && !isAttacking)
+            {
                 animator.Play("Player_run");
+            }
+                
             
             transform.localScale = new Vector3(1, 1, 1);
         }
@@ -173,7 +205,8 @@ public class PlayerController : MonoBehaviour
                 animator.Play("Player_run");
 
             transform.localScale = new Vector3(-1, 1, 1);
-        }
+        }*/
+        //***********End of Spencer Edits
         // idle
         else if (isGrounded && canDash)
         {
