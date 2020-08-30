@@ -17,14 +17,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField]Transform groundCheck;
     [SerializeField]Transform groundCheckL;
     [SerializeField]Transform groundCheckR;
-    bool isGrounded;
+    public bool isGrounded;
 
     [SerializeField]private float runSpeed = 25;
     [SerializeField]private float jumpSpeed = 50;
     [SerializeField]public float jumpTime;
     //[SerializeField]public int extraJumps;
     private float jumpTimeCounter;
-    [SerializeField]private bool canJump;
+    public bool canJump = true;
+    private float moveInput;
+    public int maxJumps;
+    public int jumps = 0;
     
 
     [Header("Dashing")]
@@ -85,6 +88,62 @@ public class PlayerController : MonoBehaviour
         {
             attackHitboxAir.SetActive(false);
         }
+
+        //******Spencer Edits************
+        //Moved code to check if grounded to Update finction, so it runs more frequently
+        
+        // If line cast goes from player to ground and hits ground layer, return true
+        if ((Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground"))) ||
+          (Physics2D.Linecast(transform.position, groundCheckL.position, 1 << LayerMask.NameToLayer("Ground"))) ||
+          (Physics2D.Linecast(transform.position, groundCheckR.position, 1 << LayerMask.NameToLayer("Ground"))))
+        {
+            if (!isGrounded)
+            {
+                //If you touch the ground, your double jumps reset
+                isGrounded = true;
+                
+                
+            }
+            if (!Input.GetKey("space") && jumps != maxJumps)
+            {
+                jumps = maxJumps;
+            }
+
+        }
+        else
+        {
+            isGrounded = false;
+            if (!isAttacking)
+            {
+                animator.Play("Player_fall");
+            }
+        }
+        //******Spencer Jump Code
+        if (Input.GetKeyDown("space") && canJump && jumps >0)
+        {
+            jumps--;
+            jumpTimeCounter = jumpTime;
+            rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
+            animator.Play("Player_jump");
+        }
+        if (Input.GetKey("space") && canJump && jumps > 0)
+        {
+            if (jumpTimeCounter > 0)
+            {
+                rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
+                jumpTimeCounter -= Time.deltaTime;
+            }
+            else
+            {
+                canJump = false;
+            }
+        }
+        if (Input.GetKeyUp("space"))
+        {
+            canJump = true;
+            jumpTimeCounter = jumpTime;
+        }
+        //*******End of Spencer Edits***********
     }
     //Activate the hitboxes
     IEnumerator DoAttack(float delay)
@@ -116,26 +175,60 @@ public class PlayerController : MonoBehaviour
     // Player Controller ------------------------------------------------------------------------------------------------
     private void FixedUpdate()
 
-    {   // If line cast goes from player to ground and hits ground layer, return true
-        if ((Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground"))) ||
-          (Physics2D.Linecast(transform.position, groundCheckL.position, 1 << LayerMask.NameToLayer("Ground"))) ||
-          (Physics2D.Linecast(transform.position, groundCheckR.position, 1 << LayerMask.NameToLayer("Ground"))))
-        {
-            isGrounded = true;
-            canJump = true;
-        }
-        else
-        {
-            isGrounded = false;
-            if(!isAttacking)
-            {
-                animator.Play("Player_fall");
-            }
-        }
+    {   
+        //******Spencer Edits************
+        //Moved code to check if grounded to Update finction, so it runs more frequently
+        //*******End of Spencer Edits***********
 
         // Movement and jump inputs-----------------------------------------------------------------------------------
-        // move right
-        if (Input.GetKey("d") || Input.GetKey("right"))
+
+        //***Spencer Edits*******
+        //Instead of looking for a specific key press, use the get axis method
+        //This makes sure the player can use both WASD to move and the arrow keys, it will also help with controller support
+        moveInput = Input.GetAxisRaw("Horizontal");
+        //Here is where it flips the player
+        if(moveInput < 0)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }else if(moveInput > 0)
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+        }
+        if (!isAttacking)
+        {
+            //If dashing, ignore the input (could be 0) and use the scale to determine which direction you are facing
+            if (!canDash)
+            {
+                rb2d.velocity = new Vector2(dashSpeed * transform.localScale.x, rb2d.velocity.y);
+            }
+            else
+            {
+                rb2d.velocity = new Vector2(moveInput * runSpeed, rb2d.velocity.y);
+            }
+            
+        }
+        else if (isAttacking && isGrounded)
+        {
+            rb2d.velocity = new Vector2(0, rb2d.velocity.y);
+        }
+        else if (isAttacking && !isGrounded)
+        {
+            //If dashing, ignore the input (could be 0) and use the scale to determine which direction you are facing
+            if (!canDash)
+            {
+                rb2d.velocity = new Vector2(dashSpeed * transform.localScale.x, rb2d.velocity.y);
+            }
+            else
+            {
+                rb2d.velocity = new Vector2(moveInput * runSpeed, rb2d.velocity.y);
+            }
+        }
+        //Get Axis doesn't always give you a perfect 0 value when no key is pressed, so it just makes sure it is greter than a small number
+        if (isGrounded && canDash && !isAttacking && Mathf.Abs(moveInput) > .1)
+        {
+            animator.Play("Player_run");
+        }
+        /*if (Input.GetKey("d") || Input.GetKey("right"))
         {
             if (!isAttacking)
             {
@@ -150,7 +243,10 @@ public class PlayerController : MonoBehaviour
                 rb2d.velocity = new Vector2(runSpeed, rb2d.velocity.y);
             }
             if (isGrounded && canDash && !isAttacking)
+            {
                 animator.Play("Player_run");
+            }
+                
             
             transform.localScale = new Vector3(1, 1, 1);
         }
@@ -173,7 +269,8 @@ public class PlayerController : MonoBehaviour
                 animator.Play("Player_run");
 
             transform.localScale = new Vector3(-1, 1, 1);
-        }
+        }*/
+        //***********End of Spencer Edits
         // idle
         else if (isGrounded && canDash)
         {
@@ -184,7 +281,12 @@ public class PlayerController : MonoBehaviour
             rb2d.velocity = new Vector2(0, rb2d.velocity.y);
         }
         // Jumping - jump heights and double jump ---------------------------------------------------------------
-        if (Input.GetKeyDown("space") && isGrounded && canJump)
+
+        //***Spencer Edits*******
+
+        
+
+        /*if (Input.GetKeyDown("space") && isGrounded && canJump)
         {
             canJump = true;
             jumpTimeCounter = jumpTime;
@@ -212,12 +314,13 @@ public class PlayerController : MonoBehaviour
                 rb2d.velocity = new Vector2(rb2d.velocity.x, jumpSpeed);
                 jumpTimeCounter -= Time.deltaTime;
             }
-        }
+        }*/
         // Dashing ---------------------------------------------------------------------------------------------
         if (Input.GetKeyDown(KeyCode.LeftShift) && isGrounded)
         {
             DashAbility();
             animator.Play("Player_dash");
+            //rb2d.velocity = new Vector2(transform.localScale.x*dashSpeed, rb2d.velocity.y);
         }       
     }
     void DashAbility()

@@ -1574,7 +1574,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!95 &768989397
 Animator:
   serializedVersion: 3
@@ -2592,7 +2592,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!95 &1454522951
 Animator:
   serializedVersion: 3
@@ -3324,10 +3324,13 @@ MonoBehaviour:
   groundCheck: {fileID: 693871891}
   groundCheckL: {fileID: 214301880}
   groundCheckR: {fileID: 1472148336}
+  isGrounded: 0
   runSpeed: 25
   jumpSpeed: 35
-  jumpTime: 0.5
-  canJump: 0
+  jumpTime: 0.35
+  canJump: 1
+  maxJumps: 2
+  jumps: 0
   canDash: 1
   dashingTime: 0.4
   dashSpeed: 50
@@ -3473,7 +3476,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1746246085}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78c8d7f6097568d4a9792b0fcf8eefe2, type: 3}
   m_Name: 
