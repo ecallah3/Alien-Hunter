@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
     public bool canJump = true;
     private float moveInput;
     public int maxJumps;
-    private int jumps = 0;
+    public int jumps = 0;
     
 
     [Header("Dashing")]
@@ -101,9 +101,14 @@ public class PlayerController : MonoBehaviour
             {
                 //If you touch the ground, your double jumps reset
                 isGrounded = true;
+                
+                
+            }
+            if (!Input.GetKey("space") && jumps != maxJumps)
+            {
                 jumps = maxJumps;
             }
-          
+
         }
         else
         {
@@ -136,6 +141,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyUp("space"))
         {
             canJump = true;
+            jumpTimeCounter = jumpTime;
         }
         //*******End of Spencer Edits***********
     }
@@ -184,13 +190,22 @@ public class PlayerController : MonoBehaviour
         if(moveInput < 0)
         {
             transform.localScale = new Vector3(-1, 1, 1);
-        }else
+        }else if(moveInput > 0)
         {
             transform.localScale = new Vector3(1, 1, 1);
         }
         if (!isAttacking)
         {
-            rb2d.velocity = new Vector2(moveInput*runSpeed, rb2d.velocity.y);
+            //If dashing, ignore the input (could be 0) and use the scale to determine which direction you are facing
+            if (!canDash)
+            {
+                rb2d.velocity = new Vector2(dashSpeed * transform.localScale.x, rb2d.velocity.y);
+            }
+            else
+            {
+                rb2d.velocity = new Vector2(moveInput * runSpeed, rb2d.velocity.y);
+            }
+            
         }
         else if (isAttacking && isGrounded)
         {
@@ -198,7 +213,15 @@ public class PlayerController : MonoBehaviour
         }
         else if (isAttacking && !isGrounded)
         {
-            rb2d.velocity = new Vector2(moveInput*runSpeed, rb2d.velocity.y);
+            //If dashing, ignore the input (could be 0) and use the scale to determine which direction you are facing
+            if (!canDash)
+            {
+                rb2d.velocity = new Vector2(dashSpeed * transform.localScale.x, rb2d.velocity.y);
+            }
+            else
+            {
+                rb2d.velocity = new Vector2(moveInput * runSpeed, rb2d.velocity.y);
+            }
         }
         //Get Axis doesn't always give you a perfect 0 value when no key is pressed, so it just makes sure it is greter than a small number
         if (isGrounded && canDash && !isAttacking && Mathf.Abs(moveInput) > .1)
@@ -297,6 +320,7 @@ public class PlayerController : MonoBehaviour
         {
             DashAbility();
             animator.Play("Player_dash");
+            //rb2d.velocity = new Vector2(transform.localScale.x*dashSpeed, rb2d.velocity.y);
         }       
     }
     void DashAbility()
