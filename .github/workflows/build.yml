@@ -5,7 +5,7 @@ on:
   push: {}
 
 env:
-  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }} # Can be generated at https://license.unity3d.com/manual
 
 jobs:
   build:
@@ -15,32 +15,27 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-          - StandaloneOSX # Build a macOS standalone (Intel 64-bit).
-          - StandaloneWindows64 # Build a Windows 64-bit standalone.
-          - StandaloneLinux64 # Build a Linux 64-bit standalone.
+          - StandaloneOSX
+          - StandaloneWindows64
+          - StandaloneLinux64
     steps:
-      # Checkout
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v2
         with:
           lfs: true
-
-      # Cache
-      - uses: actions/cache@v1.1.0
+      - name: Load Library
+        uses: actions/cache@v1.1.0
         with:
           path: Library
           key: Library
-
-      # Build
       - name: Build project
         uses: webbertakken/unity-builder@v0.10
         with:
           projectPath: "alien-hunter/Alien Hunter"
           unityVersion: 2019.2.11f1
           targetPlatform: ${{ matrix.targetPlatform }}
-
-      # Output
-      - uses: actions/upload-artifact@v1
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v1
         with:
           name: Client - ${{ matrix.targetPlatform }}
           path: build
