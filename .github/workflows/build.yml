@@ -9,7 +9,7 @@ env:
 
 jobs:
   build:
-    name: Build my project ✨
+    name: Build Unity
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -35,12 +35,12 @@ jobs:
       - name: Build project
         uses: webbertakken/unity-builder@v0.10
         with:
-          projectPath: "Game 2"
+          projectPath: "alien-hunter/Alien Hunter"
           unityVersion: 2019.2.11f1
-          targetPlatform: ${{ matrix.projectPath }}
+          targetPlatform: ${{ matrix.targetPlatform }}
 
       # Output
       - uses: actions/upload-artifact@v1
         with:
-          name: Client - ${{ matrix.projectPath }}
+          name: Client - ${{ matrix.targetPlatform }}
           path: build
