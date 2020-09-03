@@ -1,0 +1,46 @@
+name: Build Project
+
+on:
+  pull_request: {}
+  push: {}
+
+env:
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+
+jobs:
+  build:
+    name: Build my project ✨
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - StandaloneOSX # Build a macOS standalone (Intel 64-bit).
+          - StandaloneWindows64 # Build a Windows 64-bit standalone.
+          - StandaloneLinux64 # Build a Linux 64-bit standalone.
+    steps:
+      # Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+
+      # Cache
+      - uses: actions/cache@v1.1.0
+        with:
+          path: Library
+          key: Library
+
+      # Build
+      - name: Build project
+        uses: webbertakken/unity-builder@v0.10
+        with:
+          projectPath: "Game 2"
+          unityVersion: 2019.2.11f1
+          targetPlatform: ${{ matrix.projectPath }}
+
+      # Output
+      - uses: actions/upload-artifact@v1
+        with:
+          name: Client - ${{ matrix.projectPath }}
+          path: build
