@@ -1,7 +1,7 @@
 # Alien-Hunter
 Game prototype made by Eric Callahan. To be developed by the Software, Web, and Game Development Club of Eastern Michigan University.
 
-This game is a work in progress. I spent the past 3 months working on the player controller as well as the enemy AI, all of which are buggy and unfinished. Listed below are all of the game's bugs which must be fixed in order to fulfill the desired player experience. For most of the code, I had assistance from youtube tutorials, which I will I provide per bullet point. If at any point yoou need assistance, such another explanation on a glitch, or have any siggestions, if you need *anything* from me, just reach out to me on Discord via the SGW DEVS server or @Eman59#9311. I'm available from 12 PM EST to 3 AM EST approximatelly, which is pretty much when I'm awake.
+This game is a work in progress. I spent the past 3 months working on the player controller as well as the enemy AI, all of which are buggy and unfinished. Listed below are all of the game's bugs which must be fixed in order to fulfill the desired player experience. For most of the code, I had assistance from youtube tutorials, which I will I provide per bullet point.
 
 ---------------------------------------------Game Summary, Gameplay Elements, and Aesthetic ---------------------------------------
 
