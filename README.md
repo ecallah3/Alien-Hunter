@@ -1,4 +1,8 @@
 # Alien-Hunter
+
+-Update, 4/5/23-
+This game is cancelled. I am working on a new, bigger project now in Unreal.
+
 Game prototype made by Eric Callahan. To be developed by the Software, Web, and Game Development Club of Eastern Michigan University.
 
 This game is a work in progress. I spent the past 3 months working on the player controller as well as the enemy AI, all of which are buggy and unfinished. Listed below are all of the game's bugs which must be fixed in order to fulfill the desired player experience. For most of the code, I had assistance from youtube tutorials, which I will I provide per bullet point.
